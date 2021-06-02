@@ -1,5 +1,6 @@
 package com.BOEC.model.item;
 
+import com.BOEC.model.AbstractEntity;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -13,7 +14,7 @@ import javax.validation.constraints.NotNull;
 @Data
 @NoArgsConstructor
 @Entity
-public class Item {
+public class Item extends AbstractEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @NotNull
@@ -23,4 +24,5 @@ public class Item {
     private int numberInStock;
     private String description;
     private String image;
+    private boolean isPublish;
 }

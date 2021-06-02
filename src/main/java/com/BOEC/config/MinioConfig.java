@@ -17,7 +17,7 @@ public class MinioConfig {
     @Bean
     public MinioClient generateMinioClient() {
         try {
-            MinioClient client = MinioClient.builder().endpoint(minioUrl).credentials(accessKey,accessSecret).build();
+            MinioClient client = MinioClient.builder().endpoint(minioUrl).credentials(accessKey, accessSecret).build();
             return client;
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());

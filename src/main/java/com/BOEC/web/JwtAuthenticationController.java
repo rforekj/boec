@@ -5,7 +5,6 @@ import com.BOEC.model.jwt.JwtRequest;
 import com.BOEC.model.jwt.JwtResponse;
 import com.BOEC.service.UserService;
 import com.BOEC.service.dto.UserRegistrationDto;
-import com.BOEC.service.util.MinioAdapter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.ResponseEntity;
@@ -17,10 +16,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
-import java.io.File;
 
 
 @RestController
@@ -36,9 +33,6 @@ public class JwtAuthenticationController {
     @Autowired
     private UserService userDetailsService;
 
-    @Autowired
-    private MinioAdapter minioAdapter;
-
     @RequestMapping(value = "/authenticate", method = RequestMethod.POST)
     public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception {
 
@@ -52,7 +46,6 @@ public class JwtAuthenticationController {
         return ResponseEntity.ok(new JwtResponse(token));
     }
 
-    //@PreAuthorize("hasRole('ROLE_ADMIN')")
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public ResponseEntity<?> saveUser(@Valid @RequestBody UserRegistrationDto user, BindingResult result) throws Exception {
         if (result.hasErrors()) {
@@ -81,12 +74,4 @@ public class JwtAuthenticationController {
         }
     }
 
-    @PostMapping("/uploadFile")
-    public void uploadFile(@RequestPart(value = "file") MultipartFile file) {
-        this.minioAdapter.uploadFile(file);
-    }
-    @GetMapping("/downloadFile")
-    public String downloadFile(@RequestParam(value = "name") String name) {
-        return this.minioAdapter.getFile(name);
-    }
 }

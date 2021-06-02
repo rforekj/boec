@@ -1,15 +1,11 @@
 package com.BOEC.service.dto;
 
-import com.BOEC.model.Role;
 import lombok.Data;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.util.Date;
-import java.util.List;
 import java.util.Set;
 
 
@@ -34,7 +30,7 @@ public class UserRegistrationDto {
     private String email;
 
     @NotNull(message = "role must not be blank")
-    @Size(min=1, max=3, message = "Number of role must greater than 0 and lower than 4")
+    @Size(min = 1, max = 3, message = "Number of role must greater than 0 and lower than 4")
     private Set<String> roles;
 
 }

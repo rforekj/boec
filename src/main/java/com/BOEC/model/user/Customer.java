@@ -6,8 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Arrays;
 
-public class Customer extends User{
-
+public class Customer extends User {
     @Autowired
     RoleRepository roleRepository;
 

@@ -1,7 +1,10 @@
 package com.BOEC.service.impl;
 
+import com.BOEC.config.Constants;
 import com.BOEC.model.Role;
+import com.BOEC.model.processing.cart.Cart;
 import com.BOEC.model.user.User;
+import com.BOEC.repository.CartRepository;
 import com.BOEC.repository.UserRepository;
 import com.BOEC.service.UserService;
 import com.BOEC.service.dto.UserRegistrationDto;
@@ -18,6 +21,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -26,11 +30,14 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class UserServiceImpl implements UserService {
     @Autowired
     private UserRepository userRepository;
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private CartRepository cartRepository;
 
     public UserRespondDto findByEmail(String email) {
         Optional<User> user = userRepository.findByEmail(email);
@@ -39,7 +46,13 @@ public class UserServiceImpl implements UserService {
     }
 
     public UserRespondDto save(UserRegistrationDto registration) {
-        return userMapper.userToUserRespondDto(userRepository.save(userMapper.userRegistrationDtoToUser(registration)));
+        User user = userRepository.save(userMapper.userRegistrationDtoToUser(registration));
+        if (registration.getRoles().contains(Constants.RoleName.ROLE_CUSTOMER.toString())) {
+            Cart cart = new Cart();
+            cart.setCustomer(user);
+            cartRepository.save(cart);
+        }
+        return userMapper.userToUserRespondDto(user);
     }
 
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
